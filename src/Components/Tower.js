@@ -3,20 +3,21 @@ import Rod from './Rod';
 import Disk from './Disk';
 
 class Tower extends Component {
+
   render() {
-    let disks = [];
-    let height = this.props.height ? this.props.height : 3;
-    for(let i=0; i<height; i++){
-      let width = 5+10*(height-i);
+    let output = [];
+    const disks = this.props.disks.slice();
+    for(let i in disks){
+      let width = 50-10*disks[i];
+      let highlight = this.props.highlight && i===disks[i].length-1 ? true: false;
       const diskStyle = {
         position: 'absolute',
         width: width,
         bottom: 5*i,
         left: '50%',
-        color: 'red',
         transform: 'translate(-50%,100%)'
       };
-      disks.push( <Disk key={i} style={diskStyle}/> )
+      output.push( <Disk key={i} style={diskStyle} highlight={highlight}/> )
     }
     const towerStyle = {
       display: 'inline-block',
@@ -24,9 +25,9 @@ class Tower extends Component {
     };
 
     return (
-      <div className="Tower" onClick={()=>alert("Hi")}style={towerStyle}>
+      <div className="Tower" onClick={this.props.onClick} style={towerStyle}>
         <Rod>
-          {disks}
+          {output}
         </Rod>
       </div>
     );

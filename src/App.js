@@ -6,7 +6,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <Game disks="3"/>
+        <Game disks="3" />
       </div>
     );
   }
