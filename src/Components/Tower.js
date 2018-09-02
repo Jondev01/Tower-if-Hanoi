@@ -8,16 +8,17 @@ class Tower extends Component {
     let output = [];
     const disks = this.props.disks.slice();
     for(let i in disks){
-      let width = 50-10*disks[i];
-      let highlight = this.props.highlight && i===disks[i].length-1 ? true: false;
+      let width = 10*this.props.totalDisks-10*disks[i]*(this.props.totalDisks-1)/(this.props.totalDisks);
+      let highlight = this.props.highlight && i == disks.length-1 ? true: false;
       const diskStyle = {
         position: 'absolute',
         width: width,
         bottom: 5*i,
         left: '50%',
-        transform: 'translate(-50%,100%)'
+        transform: 'translate(-50%,100%)',
+        border: `${highlight ? '1px solid yellow': 'none'}`,
       };
-      output.push( <Disk key={i} style={diskStyle} highlight={highlight}/> )
+      output.push( <Disk key={i} style={diskStyle}/> )
     }
     const towerStyle = {
       display: 'inline-block',
