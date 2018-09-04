@@ -15,8 +15,9 @@ class App extends Component {
     }
     return this.minimalMoves.arr[disks];
   }
+
   render() {
-    let numberOfDisks = 5;
+    let numberOfDisks = 3;
     return (
       <div className="App">
       Best play {this.minimalMoves(numberOfDisks)}

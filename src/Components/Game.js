@@ -82,6 +82,62 @@ class Game extends Component {
     return this.state.disks[2].length == this.props.numberOfDisks;
   }
 
+  showSolution(start=0, end=2, number=this.props.numberOfDisks){
+    //not finished
+    if(number === 1){
+      console.log("number is 1");
+      console.log(start);
+      console.log(end);
+      this.moveDisk(start, end);
+      return ;
+    }
+    if(number == this.props.numberOfDisks){
+      this.setState({
+        disks: this.state.history[0].slice()
+      })
+    }
+    let i = this.lastIndex(start, end);
+      this.showSolution(start, i, number-1);
+      console.log("move disk");
+      console.log(start,end);
+      this.moveDisk(start, end);
+      this.showSolution(i, end, number-1);
+  }
+
+  moveDisk(start, end){
+    console.log("inside moveDisk");
+    console.log(this.state.disks);
+    if(this.state.disks[end].length> 0 &&
+      this.state.disks[end][this.state.disks[end].length-1] >
+      this.state.disks[start][this.state.disks[start].length-1]){
+        console.log("Can't move disk");
+        return ;
+    }
+    let startTower = this.state.disks[start].slice();
+    let endTower = this.state.disks[end].slice();
+    endTower.push(startTower.pop());
+    let disks = [
+      [],
+      [],
+      []
+    ];
+    disks[start] = startTower;
+    disks[end] = endTower;
+    let i = this.lastIndex(start, end);
+    disks[i] = this.state.disks[i].slice();
+    this.setState({
+      disks: disks
+    });
+  }
+
+  lastIndex(start, end){
+    let i = 0;
+    for(; i<3; i++){
+      if(i != start && i != end)
+        return i;
+    }
+  }
+
   renderTower(i){
     let highlight = this.state.selected === i ? true : false;
     return <Tower key={i} disks={this.state.disks[i]}
@@ -90,7 +146,6 @@ class Game extends Component {
   }
 
   render() {
-    console.log(this.gameWon());
     if(this.gameWon())
       alert("You won");
     return (
@@ -101,6 +156,7 @@ class Game extends Component {
         <div className="moveList">
         <button onClick={() => this.moveBack()}>Back</button>
         <button onClick={() => this.moveForward()}>Forward</button>
+        <button onClick={() => this.showSolution()}>Solution</button>
         </div>
         <div className="Towers">
           {this.renderTower(0)}
