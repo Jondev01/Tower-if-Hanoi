@@ -9,21 +9,21 @@ class Game extends Component {
       [],
       []
     ];
-    let history = [];
     for(let i=0; i<props.numberOfDisks; i++){
       disks[0].push(i);
     }
-    history.push(disks);
     this.state = {
       disks : disks,
       selected : null,
       move: 0,
-      history: history
+      history: [disks]
     };
   }
 
   handleClick(i){
-    const disks = this.state.disks.slice();
+    const disks = [this.state.disks[0].slice(), this.state.disks[1].slice(), this.state.disks[2].slice()];
+    const history = this.state.history.slice();
+    let move = this.state.move;
     let selected = this.state.selected;
     //if user has not previously selected a tower or selects the same tower again
     if(selected===null || i===selected){
@@ -38,23 +38,48 @@ class Game extends Component {
     if(disks[i].length === 0 || disks[i][disks[i].length-1] < disks[selected][disks[selected].length-1]){
       //perform move
       disks[i].push(disks[selected].pop());
-      this.move();
+      move++;
+      if(move < history.length)
+        history.splice(move);
+      this.setState({
+        history: history.concat([disks]),
+        disks: disks,
+        move: move
+      });
     }
     this.setState({
-      disks : disks,
       selected: null
     });
   }
 
-  move(){
+  moveBack(){
     let move = this.state.move;
-    const history = this.state.history.splice();
-    move++;
-    history.push(this.state.disks);
+    const history = this.state.history.slice();
+    if(move === 0)
+      return;
+    move--;
     this.setState({
-      history: history,
-      move: move
+      move: move,
+      disks: history[move],
+      selected: null
     });
+  }
+
+  moveForward(){
+    let move = this.state.move;
+    const history = this.state.history.slice();
+    if(move === history.length-1)
+      return;
+    move++;
+    this.setState({
+      move: move,
+      disks: history[move],
+      selected: null
+    });
+  }
+
+  gameWon(){
+    return this.state.disks[2].length == this.props.numberOfDisks;
   }
 
   renderTower(i){
@@ -65,12 +90,17 @@ class Game extends Component {
   }
 
   render() {
+    console.log(this.gameWon());
+    if(this.gameWon())
+      alert("You won");
     return (
       <div className="Game">
         <div className="move">
           {this.state.move}
         </div>
         <div className="moveList">
+        <button onClick={() => this.moveBack()}>Back</button>
+        <button onClick={() => this.moveForward()}>Forward</button>
         </div>
         <div className="Towers">
           {this.renderTower(0)}

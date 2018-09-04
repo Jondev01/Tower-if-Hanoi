@@ -16,7 +16,8 @@ class Tower extends Component {
         bottom: 5*i,
         left: '50%',
         transform: 'translate(-50%,100%)',
-        border: `${highlight ? '1px solid yellow': 'none'}`,
+        //border: `${highlight ? '1px solid yellow': 'none'}`
+      backgroundColor: `${highlight ? '#777': 'black'}`
       };
       output.push( <Disk key={i} style={diskStyle}/> )
     }
