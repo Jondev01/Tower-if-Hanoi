@@ -5,17 +5,18 @@ import Game from './Components/Game';
 class App extends Component {
   constructor(){
     super();
-    this.best = [0,1];
   }
 
   minimalMoves(disks){
-    for(let i=this.best.length; i<= disks; i++){
-      this.best.push(2*this.best[i-1]+1);
+    if( typeof this.minimalMoves.arr === 'undefined')
+      this.minimalMoves.arr = [0,1];
+    for(let i=this.minimalMoves.arr.length; i<= disks; i++){
+      this.minimalMoves.arr.push(2*this.minimalMoves.arr[i-1]+1);
     }
-    return this.best[disks];
+    return this.minimalMoves.arr[disks];
   }
   render() {
-    let numberOfDisks = 3;
+    let numberOfDisks = 5;
     return (
       <div className="App">
       Best play {this.minimalMoves(numberOfDisks)}
