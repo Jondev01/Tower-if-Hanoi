@@ -53,28 +53,32 @@ class Game extends Component {
   }
 
   moveBack(){
-    let move = this.state.move;
-    const history = this.state.history.slice();
-    if(move === 0)
-      return;
-    move--;
-    this.setState({
-      move: move,
-      disks: history[move],
-      selected: null
+    this.setState(function(state){
+      let move = state.move;
+      const history = state.history.slice();
+      if(move === 0)
+        return state;
+      move--;
+      return{
+        move: move,
+        disks: history[move],
+        selected: null
+      };
     });
   }
 
   moveForward(){
-    let move = this.state.move;
-    const history = this.state.history.slice();
-    if(move === history.length-1)
-      return;
-    move++;
-    this.setState({
-      move: move,
-      disks: history[move],
-      selected: null
+    this.setState(function(state){
+      let move = state.move;
+      const history = state.history.slice();
+      if(move === history.length-1)
+        return state;
+      move++;
+      return{
+        move: move,
+        disks: history[move],
+        selected: null
+      };
     });
   }
 
@@ -84,50 +88,57 @@ class Game extends Component {
 
   showSolution(start=0, end=2, number=this.props.numberOfDisks){
     //not finished
+    if(number == this.props.numberOfDisks){
+      this.setState( (state) => (
+        {
+        disks: state.history[0].slice(),
+        move: 0,
+        history: [state.history[0]]
+      }));
+    }
     if(number === 1){
-      console.log("number is 1");
-      console.log(start);
-      console.log(end);
-      this.moveDisk(start, end);
+      this.setState( (state) => this.moveDisk(start, end, state));
       return ;
     }
-    if(number == this.props.numberOfDisks){
-      this.setState({
-        disks: this.state.history[0].slice()
-      })
-    }
     let i = this.lastIndex(start, end);
-      this.showSolution(start, i, number-1);
-      console.log("move disk");
-      console.log(start,end);
-      this.moveDisk(start, end);
-      this.showSolution(i, end, number-1);
+    this.showSolution(start, i, number-1);
+    this.setState( (state) => this.moveDisk(start, end, state));
+    this.showSolution(i, end, number-1);
+
+    if(number == this.props.numberOfDisks){
+      this.setState( (state) => ({
+        move: 0,
+        disks: state.history[0].slice(),
+        selected: null
+      }));
+      for(let j=0; j<this.props.minMoves; j++){
+        let self = this;
+        (function(x){
+          setTimeout(()=>self.moveForward(), x*1000);
+        })(j);
+      }
+    }
   }
 
-  moveDisk(start, end){
-    console.log("inside moveDisk");
-    console.log(this.state.disks);
-    if(this.state.disks[end].length> 0 &&
-      this.state.disks[end][this.state.disks[end].length-1] >
-      this.state.disks[start][this.state.disks[start].length-1]){
-        console.log("Can't move disk");
-        return ;
+  moveDisk(start, end, oldState){
+    if(oldState.disks[end].length> 0 &&
+      oldState.disks[end][oldState.disks[end].length-1] >
+      oldState.disks[start][oldState.disks[start].length-1]){
+        return oldState;
     }
-    let startTower = this.state.disks[start].slice();
-    let endTower = this.state.disks[end].slice();
-    endTower.push(startTower.pop());
-    let disks = [
-      [],
-      [],
-      []
+    const disks = [
+      oldState.disks[0].slice(),
+      oldState.disks[1].slice(),
+      oldState.disks[2].slice()
     ];
-    disks[start] = startTower;
-    disks[end] = endTower;
-    let i = this.lastIndex(start, end);
-    disks[i] = this.state.disks[i].slice();
-    this.setState({
-      disks: disks
-    });
+    disks[end].push(disks[start].pop());
+    if(oldState.move+1 < oldState.history.length)
+      oldState.history.splice(oldState.move);
+    return {
+      disks: disks,
+      move: oldState.move+1,
+      history: oldState.history.concat([disks])
+    };
   }
 
   lastIndex(start, end){
@@ -146,8 +157,8 @@ class Game extends Component {
   }
 
   render() {
-    if(this.gameWon())
-      alert("You won");
+    //if(this.gameWon())
+    //  alert("You won");
     return (
       <div className="Game">
         <div className="move">

@@ -3,9 +3,7 @@ import './App.css';
 import Game from './Components/Game';
 
 class App extends Component {
-  constructor(){
-    super();
-  }
+
 
   minimalMoves(disks){
     if( typeof this.minimalMoves.arr === 'undefined')
@@ -21,7 +19,7 @@ class App extends Component {
     return (
       <div className="App">
       Best play {this.minimalMoves(numberOfDisks)}
-        <Game numberOfDisks={numberOfDisks} />
+        <Game numberOfDisks={numberOfDisks} minMoves={this.minimalMoves(numberOfDisks)} />
       </div>
     );
   }
