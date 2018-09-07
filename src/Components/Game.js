@@ -83,11 +83,13 @@ class Game extends Component {
   }
 
   gameWon(){
+
     return this.state.disks[2].length == this.props.numberOfDisks;
   }
 
   showSolution(start=0, end=2, number=this.props.numberOfDisks){
     //not finished
+    let buttons = document.getElementsByTagName('button');
     if(number == this.props.numberOfDisks){
       this.setState( (state) => (
         {
@@ -95,6 +97,11 @@ class Game extends Component {
         move: 0,
         history: [state.history[0]]
       }));
+      console.log(buttons);
+      for(let button of buttons){
+        button.disabled = true;
+        console.log(button.disabled);
+      }
     }
     if(number === 1){
       this.setState( (state) => this.moveDisk(start, end, state));
@@ -114,9 +121,15 @@ class Game extends Component {
       for(let j=0; j<this.props.minMoves; j++){
         let self = this;
         (function(x){
-          setTimeout(()=>self.moveForward(), x*1000);
+          setTimeout(()=>{
+            self.moveForward();
+            if(j==self.props.minMoves-1)
+            for(let button of buttons)
+              button.disabled = false;
+            }, self.props.numberOfDisks <=5 ? x*1000 : x*20000/self.props.minMoves);
         })(j);
       }
+
     }
   }
 
