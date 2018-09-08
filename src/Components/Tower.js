@@ -10,8 +10,9 @@ class Tower extends Component {
     const disks = this.props.disks.slice();
     let colors = ['#ff0040', '#bf00ff', '#4000ff', '#0040ff',
     '#00ffff', '#00ff40', '	#40ff00', '#bfff00', '#ff8000', '#ff4000'];
+    let scale = Math.max(window.innerWidth, window.screen.width) <1000 ? 8 : 25;
     for(let i in disks){
-      let width = 30*(this.props.totalDisks-disks[i]*(this.props.totalDisks-1)/(this.props.totalDisks));
+      let width = scale*(this.props.totalDisks-disks[i]*(this.props.totalDisks-1)/(this.props.totalDisks));
       let highlight = this.props.highlight && i == disks.length-1 ? true: false;
       const diskStyle = {
         position: 'absolute',
@@ -29,7 +30,7 @@ class Tower extends Component {
     const towerStyle = {
       display: 'inline-block',
       //margin: `${this.props.totalDisks<=6 ? '100px' : '150px'}`
-      margin: '15%'
+      margin: '15%',
     };
 
     return (

@@ -9,7 +9,7 @@ class App extends Component {
     return (
       <div className="App">
         <header>
-          <h1>Play Tower of Hanoi</h1>
+          <h1>Tower of Hanoi</h1>
         </header>
         <Game/>
       </div>

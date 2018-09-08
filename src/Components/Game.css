@@ -1,18 +1,27 @@
-.Game{
-  padding: 20;
+/*.Game{
+  padding: 20px;
   text-align: center;
-}
+}*/
 
 .move{
   margin-bottom: 10px;
 }
+
+.info {
+  text-align: left;
+  display: inline-block;
+  margin: 0 auto;
+}
+
 button {
   color: white;
-  background-color: #e13232;
+  background-color: #db460e;
   padding: 5px 10px 5px 10px;
   border: none;
+  border-radius: 4px;
   margin: 20px 5px 20px 5px;
   font-size: 1rem;
+  letter-spacing: 0.5px;
 }
 
 button:hover{

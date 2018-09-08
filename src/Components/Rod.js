@@ -10,7 +10,7 @@ class Rod extends Component {
       display: 'inline-block',
       width: width,
       height: height,
-      backgroundColor: 'brown',
+      backgroundColor: '#db460e',
       margin: 0,
       padding: '0',
     };

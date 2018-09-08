@@ -1,5 +1,4 @@
 body{
-  background-color: #fcfcfc;
   text-align: center;
   padding: 0;
 }
@@ -12,19 +11,31 @@ header{
 
 .Game {
   display: inline-block;
+  margin: 0 auto;
   background-color: #372786;
   padding: 20px;
   width: 80%;
-  margin: auto 0;
-  box-shadow: 2px 0px 4px #333, -2px 0px 4px #333,
-   0px 2px 4px #333, 0px -2px 4px #333;
+  box-shadow: 3px 0px 4px #333, -3px 0px 4px #333,
+   0px 3px 4px #333, 0px -3px 4px #333;
+  border-radius: 10px;
 }
 
 .Game button {
   background-color: #e13232;
-
 }
 
 .Tower:hover{
   cursor: pointer;
+}
+
+@media screen and (max-width: 800px){
+  .Game {
+    width: 100%;
+    height: 100vh;
+    border-radius: 0px;
+  }
+
+  .Game button {
+    padding: 5px 3px;
+  }
 }

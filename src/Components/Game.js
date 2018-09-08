@@ -197,7 +197,8 @@ class Game extends Component {
     //  alert("You won");
     return (
       <div className="Game">
-        <input id="numberOfDisks" type="number" name="Number of Disks" onChange={() =>this.restart()}
+      <div className="info">
+        Number of Disks: <input id="numberOfDisks" type="number" name="Number of Disks" onChange={() =>this.restart()}
          placeholder="3" min="1" max="10"/>
         <div className="move">
           Moves: {this.state.move}
@@ -205,10 +206,12 @@ class Game extends Component {
         <div className="best-play">
           Best play: {this.minimalMoves(this.state.numberOfDisks)}
         </div>
+        <br/>
         <button onClick={() => this.restart()}>Restart</button>
         <button onClick={() => this.moveBack()}>Back</button>
         <button onClick={() => this.moveForward()}>Forward</button>
         <button onClick={() => this.showSolution()}>Solution</button>
+      </div>
         <div className="Towers">
           {this.renderTower(0)}
           {this.renderTower(1)}
