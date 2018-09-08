@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 class Rod extends Component {
   render() {
     let width, height;
-    width = this.props.width ? this.props.width : '5px';
+    width = this.props.width ? this.props.width : '7px';
     height = this.props.height ? this.props.height: '100px'
     const divStyle ={
       position: 'relative',
@@ -11,8 +11,8 @@ class Rod extends Component {
       width: width,
       height: height,
       backgroundColor: 'brown',
-      margin: '5px',
-      padding: '0'
+      margin: 0,
+      padding: '0',
     };
     return (
       <div className="Rod" style={divStyle}>

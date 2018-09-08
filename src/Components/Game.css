@@ -1,0 +1,24 @@
+.Game{
+  padding: 20;
+  text-align: center;
+}
+
+.move{
+  margin-bottom: 10px;
+}
+button {
+  color: white;
+  background-color: #e13232;
+  padding: 5px 10px 5px 10px;
+  border: none;
+  margin: 20px 5px 20px 5px;
+  font-size: 1rem;
+}
+
+button:hover{
+  opacity: 0.8;
+}
+
+input{
+  margin-bottom: 10px;
+}

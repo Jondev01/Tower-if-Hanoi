@@ -12,7 +12,7 @@ class Disk extends Component {
       height: '7px',
       backgroundColor: 'black',
       padding: '0',
-      borderRadius: '15px',
+      borderRadius: '10px',
       margin: 0
     };
     const style = {...divStyle,...this.props.style};

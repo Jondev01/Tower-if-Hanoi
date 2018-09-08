@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Tower from './Tower';
+import './Game.css';
 
 class Game extends Component {
   constructor(props){
@@ -9,7 +10,9 @@ class Game extends Component {
       [],
       []
     ];
-    for(let i=0; i<props.numberOfDisks; i++){
+    let numberOfDisks = props.numberOfDisks ? props.numberOfDisks : 3;
+
+    for(let i=0; i<numberOfDisks; i++){
       disks[0].push(i);
     }
     this.state = {
@@ -17,8 +20,18 @@ class Game extends Component {
       selected : null,
       move: 0,
       history: [disks],
-      numberOfDisks: this.props.numberOfDisks
+      numberOfDisks: numberOfDisks,
+      minMoves: this.minimalMoves(numberOfDisks)
     };
+  }
+
+  minimalMoves(number){
+    if( typeof this.minimalMoves.arr === 'undefined')
+      this.minimalMoves.arr = [0,1];
+    for(let i=this.minimalMoves.arr.length; i<= number; i++){
+      this.minimalMoves.arr.push(2*this.minimalMoves.arr[i-1]+1);
+    }
+    return this.minimalMoves.arr[number];
   }
 
   handleClick(i){
@@ -82,6 +95,7 @@ class Game extends Component {
       for(let button of buttons){
         button.disabled = true;
       }
+      document.getElementById('numberOfDisks').disabled = true;
     }
     if(number === 1){
       this.setState( (state) => this.moveDisk(start, end, state));
@@ -98,15 +112,17 @@ class Game extends Component {
         disks: state.history[0].slice(),
         selected: null
       }));
-      for(let j=0; j<this.props.minMoves; j++){
+      for(let j=0; j<this.state.minMoves; j++){
         let self = this;
         (function(x){
           setTimeout(()=>{
             self.moveForward();
-            if(j==self.props.minMoves-1)
-            for(let button of buttons)
-              button.disabled = false;
-            }, self.state.numberOfDisks <=5 ? (x+1)*1000 : (x+1)*20000/self.props.minMoves);
+            if(j==self.state.minMoves-1){
+              for(let button of buttons)
+                button.disabled = false;
+              document.getElementById('numberOfDisks').disabled = false;
+            }
+            }, self.state.numberOfDisks <=5 ? (x+1)*1000 : (x+1)*20000/self.state.minMoves);
         })(j);
       }
     }
@@ -148,7 +164,6 @@ class Game extends Component {
 
   restart(){
     this.setState(function(state){
-        let history = state.history.slice();
         let value = document.getElementById('numberOfDisks').value
         let numberOfDisks = value>0 && value<=10 ? value: 3;
         let disks = [
@@ -156,19 +171,18 @@ class Game extends Component {
           [],
           []
         ];
-          for(let i=0; i<numberOfDisks; i++){
+        for(let i=0; i<numberOfDisks; i++){
             disks[0].push(i);
-          }
+        }
         return {
           disks: disks,
           selected: null,
           move: 0,
           history: [disks],
-          numberOfDisks: numberOfDisks
+          numberOfDisks: numberOfDisks,
+          minMoves: this.minimalMoves(numberOfDisks)
         };
-    })
-
-
+    });
   }
 
   renderTower(i){
@@ -183,17 +197,18 @@ class Game extends Component {
     //  alert("You won");
     return (
       <div className="Game">
-        <div className="move">
-          {this.state.move}
-        </div>
-        <div className="moveList">
         <input id="numberOfDisks" type="number" name="Number of Disks" onChange={() =>this.restart()}
          placeholder="3" min="1" max="10"/>
+        <div className="move">
+          Moves: {this.state.move}
+        </div>
+        <div className="best-play">
+          Best play: {this.minimalMoves(this.state.numberOfDisks)}
+        </div>
         <button onClick={() => this.restart()}>Restart</button>
         <button onClick={() => this.moveBack()}>Back</button>
         <button onClick={() => this.moveForward()}>Forward</button>
         <button onClick={() => this.showSolution()}>Solution</button>
-        </div>
         <div className="Towers">
           {this.renderTower(0)}
           {this.renderTower(1)}
