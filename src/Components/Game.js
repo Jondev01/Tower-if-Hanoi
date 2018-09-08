@@ -16,40 +16,22 @@ class Game extends Component {
       disks : disks,
       selected : null,
       move: 0,
-      history: [disks]
+      history: [disks],
+      numberOfDisks: this.props.numberOfDisks
     };
   }
 
   handleClick(i){
-    const disks = [this.state.disks[0].slice(), this.state.disks[1].slice(), this.state.disks[2].slice()];
-    const history = this.state.history.slice();
-    let move = this.state.move;
     let selected = this.state.selected;
-    //if user has not previously selected a tower or selects the same tower again
-    if(selected===null || i===selected){
-      selected = disks[i].length>0 && i!==selected ? i : null;
-      this.setState({
-        selected : selected
-      });
+    //if user has not previously selected a tower
+    if(selected===null){
+      this.setState( (state) => ({
+        selected : state.disks[i].length>0  ? i : null
+      }));
       return;
     }
-    //Check if move is legal
-    //index is at bottom is 0 and the largest disk has id 0
-    if(disks[i].length === 0 || disks[i][disks[i].length-1] < disks[selected][disks[selected].length-1]){
-      //perform move
-      disks[i].push(disks[selected].pop());
-      move++;
-      if(move < history.length)
-        history.splice(move);
-      this.setState({
-        history: history.concat([disks]),
-        disks: disks,
-        move: move
-      });
-    }
-    this.setState({
-      selected: null
-    });
+    //move disk
+    this.setState( (state) => this.moveDisk(selected, i, state));
   }
 
   moveBack(){
@@ -84,23 +66,21 @@ class Game extends Component {
 
   gameWon(){
 
-    return this.state.disks[2].length == this.props.numberOfDisks;
+    return this.state.disks[2].length == this.state.numberOfDisks;
   }
 
-  showSolution(start=0, end=2, number=this.props.numberOfDisks){
+  showSolution(start=0, end=2, number=this.state.numberOfDisks){
     //not finished
     let buttons = document.getElementsByTagName('button');
-    if(number == this.props.numberOfDisks){
+    if(number == this.state.numberOfDisks){
       this.setState( (state) => (
         {
         disks: state.history[0].slice(),
         move: 0,
         history: [state.history[0]]
       }));
-      console.log(buttons);
       for(let button of buttons){
         button.disabled = true;
-        console.log(button.disabled);
       }
     }
     if(number === 1){
@@ -112,7 +92,7 @@ class Game extends Component {
     this.setState( (state) => this.moveDisk(start, end, state));
     this.showSolution(i, end, number-1);
 
-    if(number == this.props.numberOfDisks){
+    if(number == this.state.numberOfDisks){
       this.setState( (state) => ({
         move: 0,
         disks: state.history[0].slice(),
@@ -126,18 +106,20 @@ class Game extends Component {
             if(j==self.props.minMoves-1)
             for(let button of buttons)
               button.disabled = false;
-            }, self.props.numberOfDisks <=5 ? x*1000 : x*20000/self.props.minMoves);
+            }, self.state.numberOfDisks <=5 ? (x+1)*1000 : (x+1)*20000/self.props.minMoves);
         })(j);
       }
-
     }
   }
 
   moveDisk(start, end, oldState){
-    if(oldState.disks[end].length> 0 &&
+    if(start === end || (oldState.disks[end].length> 0 &&
       oldState.disks[end][oldState.disks[end].length-1] >
-      oldState.disks[start][oldState.disks[start].length-1]){
-        return oldState;
+      oldState.disks[start][oldState.disks[start].length-1])){
+        return {
+          ...oldState,
+          selected: null
+        }
     }
     const disks = [
       oldState.disks[0].slice(),
@@ -145,12 +127,14 @@ class Game extends Component {
       oldState.disks[2].slice()
     ];
     disks[end].push(disks[start].pop());
-    if(oldState.move+1 < oldState.history.length)
-      oldState.history.splice(oldState.move);
+    let move = oldState.move +1;
+    if(move < oldState.history.length)
+      oldState.history.splice(move);
     return {
       disks: disks,
-      move: oldState.move+1,
-      history: oldState.history.concat([disks])
+      move: move,
+      history: oldState.history.concat([disks]),
+      selected: null
     };
   }
 
@@ -162,11 +146,36 @@ class Game extends Component {
     }
   }
 
+  restart(){
+    this.setState(function(state){
+        let history = state.history.slice();
+        let value = document.getElementById('numberOfDisks').value
+        let numberOfDisks = value>0 && value<=10 ? value: 3;
+        let disks = [
+          [],
+          [],
+          []
+        ];
+          for(let i=0; i<numberOfDisks; i++){
+            disks[0].push(i);
+          }
+        return {
+          disks: disks,
+          selected: null,
+          move: 0,
+          history: [disks],
+          numberOfDisks: numberOfDisks
+        };
+    })
+
+
+  }
+
   renderTower(i){
     let highlight = this.state.selected === i ? true : false;
     return <Tower key={i} disks={this.state.disks[i]}
      onClick={()=>this.handleClick(i)} highlight={highlight}
-      totalDisks={this.props.numberOfDisks}/>
+      totalDisks={this.state.numberOfDisks}/>
   }
 
   render() {
@@ -178,6 +187,9 @@ class Game extends Component {
           {this.state.move}
         </div>
         <div className="moveList">
+        <input id="numberOfDisks" type="number" name="Number of Disks" onChange={() =>this.restart()}
+         placeholder="3" min="1" max="10"/>
+        <button onClick={() => this.restart()}>Restart</button>
         <button onClick={() => this.moveBack()}>Back</button>
         <button onClick={() => this.moveForward()}>Forward</button>
         <button onClick={() => this.showSolution()}>Solution</button>

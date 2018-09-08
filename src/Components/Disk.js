@@ -9,9 +9,11 @@ class Disk extends Component {
     let divStyle ={
       display: 'inline-block',
       width: width,
-      height: '3px',
+      height: '7px',
       backgroundColor: 'black',
       padding: '0',
+      borderRadius: '15px',
+      margin: 0
     };
     const style = {...divStyle,...this.props.style};
     return (
