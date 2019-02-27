@@ -1,0 +1,6 @@
+{
+  "projects": {
+    "default": "tower-of-hanoi",
+    "tower-of-hanoi": "tower-of-hanoi-1619d"
+  }
+}
