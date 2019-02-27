@@ -193,8 +193,8 @@ class Game extends Component {
   }
 
   render() {
-    //if(this.gameWon())
-    //  alert("You won");
+    if(this.gameWon())
+      alert("You won");
     return (
       <div className="Game">
       <div className="info">

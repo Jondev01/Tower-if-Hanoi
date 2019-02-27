@@ -3,8 +3,8 @@ import React, { Component } from 'react';
 class Rod extends Component {
   render() {
     let width, height;
-    width = this.props.width ? this.props.width : '7px';
-    height = this.props.height ? this.props.height: '100px'
+    width = this.props.width ? this.props.width : '14px';
+    height = this.props.height ? this.props.height: '200px'
     const divStyle ={
       position: 'relative',
       display: 'inline-block',
