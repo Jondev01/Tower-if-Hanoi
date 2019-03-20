@@ -165,7 +165,7 @@ class Game extends Component {
   restart(){
     this.setState(function(state){
         let value = document.getElementById('numberOfDisks').value
-        let numberOfDisks = value>0 && value<=10 ? value: 3;
+        let numberOfDisks = value>0 && value<=5 ? value : 3;
         let disks = [
           [],
           [],
@@ -199,7 +199,7 @@ class Game extends Component {
       <div className="Game">
       <div className="info">
         Number of Disks: <input id="numberOfDisks" type="number" name="Number of Disks" onChange={() =>this.restart()}
-         placeholder="3" min="1" max="10"/>
+         placeholder="3" min="1" max="5"/>
         <div className="move">
           Moves: {this.state.move}
         </div>
