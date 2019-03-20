@@ -34,7 +34,7 @@ class Tower extends Component {
     const towerStyle = {
       display: 'inline-block',
       //margin: `${this.props.totalDisks<=6 ? '100px' : '150px'}`
-      margin: screenWidth<500 ? '8vw': '12%',
+      margin: screenWidth<500 ? '45px': '12%',
     };
 
     return (
